@@ -9,6 +9,8 @@ using ServerLibrary.Data;
 using ServerLibrary.Helpers;
 using ServerLibrary.Repositories.Contracts;
 
+using Constants = ServerLibrary.Helpers.Contansts;
+
 namespace ServerLibrary.Repositories.Implementations
 {
     public class UserAccountRepository(IOptions<JwtSection> config, AppDbContext appDbContext) : IUserAccount
@@ -23,13 +25,32 @@ namespace ServerLibrary.Repositories.Implementations
             var applicationUser = new ApplicationUser();
 
             applicationUser.FullnameFill(user.Fullname!);
-            applicationUser.EmailFill(user.EmailAddress);
+            applicationUser.EmailFill(user.EmailAddress!);
             applicationUser.PasswordFill(BCrypt.Net.BCrypt.HashPassword(user.Password));
 
             await AddToDatabase(applicationUser);
 
             // checar, criar e dar um role
-            var checkAdminRole = await appDbContext.SystemRoles.First
+            var checkAdminRole = await appDbContext.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Constants.Admin));
+            if (checkAdminRole is null)
+            {
+                var createAdminRole = await AddToDatabase(new SystemRole() { Name = Constants.Admin });
+                await AddToDatabase(new UserRole() { RoleId = createAdminRole.Id, UserId = applicationUser.Id });
+
+                return new GeneralResponse(true, "Conta criada");
+            }
+
+            var checkUserRole = await appDbContext.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Contansts.User));
+            SystemRole response = new();
+            if (checkUserRole is null)
+            {
+                response = await AddToDatabase(new SystemRole() { Name = Constants.User });
+                await AddToDatabase(new UserRole() { RoleId = response.Id, UserId = applicationUser.Id });
+            }
+            else
+                await AddToDatabase(new UserRole() { RoleId = checkUserRole.Id, UserId = applicationUser.Id });
+
+            return new GeneralResponse(true, "Conta criada");
         }
 
         public Task<LoginResponse> CreateAsync(Login user)
