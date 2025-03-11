@@ -22,11 +22,12 @@ namespace ServerLibrary.Repositories.Implementations
             var checkUser = await FindUserByEmail(user.EmailAddress!);
             if (checkUser != null) return new GeneralResponse(false, "Usuário já registrado");
 
-            var applicationUser = new ApplicationUser();
-
-            applicationUser.FullnameFill(user.Fullname!);
-            applicationUser.EmailFill(user.EmailAddress!);
-            applicationUser.PasswordFill(BCrypt.Net.BCrypt.HashPassword(user.Password));
+            var applicationUser = await AddToDatabase(new ApplicationUser()
+            {
+                Fullname = user.Fullname,
+                Email = user.EmailAddress,
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password)
+            });
 
             await AddToDatabase(applicationUser);
 
