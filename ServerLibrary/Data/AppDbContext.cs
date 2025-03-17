@@ -13,5 +13,12 @@ namespace ServerLibrary.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<SystemRole> SystemRoles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(u => u.Id)
+                .ValueGeneratedOnAdd();  // Garante que o EF Core gere o ID automaticamente
+        }
     }
  }
