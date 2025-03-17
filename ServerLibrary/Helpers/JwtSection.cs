@@ -2,8 +2,8 @@
 {
     public class JwtSection
     {
-        public string? Key { get; private set; }
-        public string? Issuer { get; private set; }
-        public string? Audience { get; private set; }
+        public string? Key { get; set; }
+        public string? Issuer { get; set; }
+        public string? Audience { get; set; }
     }
 }
