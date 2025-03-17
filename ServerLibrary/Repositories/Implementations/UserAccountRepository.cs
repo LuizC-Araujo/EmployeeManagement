@@ -32,8 +32,6 @@ namespace ServerLibrary.Repositories.Implementations
                 Password = BCrypt.Net.BCrypt.HashPassword(user.Password)
             });
 
-            await AddToDatabase(applicationUser);
-
             // checar, criar e dar um role
             var checkAdminRole = await appDbContext.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Constants.Admin));
             if (checkAdminRole is null)
