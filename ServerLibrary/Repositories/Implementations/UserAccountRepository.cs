@@ -74,7 +74,7 @@ namespace ServerLibrary.Repositories.Implementations
 
             string jwtToken = GenerateToken(applicationUser, getRoleName!.Name!);
             string refreshToken = GenerateRefreshToken();
-            return new LoginResponse(true, jwtToken, refreshToken);
+            return new LoginResponse(true, "Login foi um sucesso", jwtToken, refreshToken);
         }
 
         private string GenerateToken(ApplicationUser user, string role)
