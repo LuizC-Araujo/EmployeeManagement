@@ -26,5 +26,13 @@ namespace Server.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshTokenAsync(RefreshToken token)
+        {
+            if (token is null) return BadRequest("Modelo está vazio");
+            var result = await accountInterface.RefreshTokenAsync(token);
+            return Ok(result);
+        }
     }
 }
