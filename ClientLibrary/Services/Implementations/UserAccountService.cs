@@ -18,9 +18,13 @@ namespace ClientLibrary.Services.Implementations
             return await result.Content.ReadFromJsonAsync<GeneralResponse>()!;
         }
 
-        public Task<LoginResponse> SignInAsync(Login user)
+        public async Task<LoginResponse> SignInAsync(Login user)
         {
-            throw new NotImplementedException();
+            var httpClient = getHttpClient.GetPublicHttpClient();
+            var result = await httpClient.PostAsJsonAsync($"{AuthUrl}/login", user);
+            if (!result.IsSuccessStatusCode) return new LoginResponse(false, "Ocorreu um erro");
+
+            return await result.Content.ReadFromJsonAsync<LoginResponse>()!;
         }
 
         public Task<LoginResponse> RefreshTokenAsync(RefreshToken token)
