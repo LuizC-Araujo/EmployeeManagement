@@ -32,9 +32,11 @@ namespace ClientLibrary.Services.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<WeatherForecast[]> GetWeatherForecasts()
+        public async Task<WeatherForecast[]> GetWeatherForecasts()
         {
-            throw new NotImplementedException();
+            var httpClient = await getHttpClient.GetPrivateHttpClient();
+            var result = await httpClient.GetFromJsonAsync<WeatherForecast[]>("api/weatherforecast");
+            return result!;
         }
 
     }
