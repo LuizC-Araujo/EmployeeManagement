@@ -38,5 +38,9 @@
             { Token = result.Token, RefreshToken = result.RefreshToken });
             NavManager.NavigateTo("/", forceLoad: true);
         }
+        else
+        {
+            Console.WriteLine(result.Message);
+        }
     }
 }
