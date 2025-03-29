@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.DTOs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServerLibrary.Repositories.Contracts;
@@ -7,6 +8,7 @@ namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowBlazorWasm")]
     public class AuthenticationController(IUserAccount accountInterface) : ControllerBase
     {
         [HttpPost("register")]
@@ -33,6 +35,12 @@ namespace Server.Controllers
             if (token is null) return BadRequest("Modelo está vazio");
             var result = await accountInterface.RefreshTokenAsync(token);
             return Ok(result);
+        }
+
+        [HttpOptions]
+        public IActionResult Options()
+        {
+            return Ok();
         }
     }
 }

@@ -34,7 +34,8 @@
         if (result.Flag)
         {
             var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
-            await customAuthStateProvider.UpdateAuthenticationState(new UserSession() { Token = result.Token, RefreshToken = result.RefreshToken, });
+            await customAuthStateProvider.UpdateAuthenticationState(new UserSession() 
+            { Token = result.Token, RefreshToken = result.RefreshToken });
             NavManager.NavigateTo("/", forceLoad: true);
         }
     }
